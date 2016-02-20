@@ -90,6 +90,16 @@ Purpose: Defines default overrides and configuration options for the dial.
 Default: `false`  
 Type: `Boolean`  
 Purpose: If set to true, disables the manipulation of the dial.  
+
+##### `renderText`  
+Default: `true`  
+Type: `Boolean`  
+Purpose: If set to false, does not render text in center of dial.  
+
+##### `manipulatable`  
+Default: `true`  
+Type: `Boolean`  
+Purpose: If set to false, disables user input to the dial
   
 ##### `frameBackgroundColor`  
 Default: `'white'`  

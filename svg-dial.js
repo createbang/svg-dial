@@ -1,3 +1,4 @@
+/*eslint-disable */
 //     svg-dial
 //     (c) 2015 Michael Phillips
 //     https://github.com/createbang/svg-dial
@@ -61,6 +62,8 @@
   exports.SVGDial = function(el, options) {
     this.el = el;
     this.options = defaults(options || {}, {
+      renderText: true,
+      manipulatable: true,
       disabled: false,
       frameSize: 200,
       ringWidth: 50,
@@ -90,6 +93,7 @@
     setValue: function(percentage) {
       var angle = this.convertPercentageToAngle(percentage);
       this.updateDial(angle);
+      this.executeCallback('onChange', [this.percentage]);
     },
 
     initialize: function() {
@@ -110,8 +114,10 @@
       };
 
       this.moveKnob(this.convertPercentageToAngle(0));
-      this.innerCircle.drag(onChange, onStart, onEnd, this, this, this);
-      this.outerCircle.drag(onChange, onStart, onEnd, this, this, this);
+      if(this.options.manipulatable){
+        this.innerCircle.drag(onChange, onStart, onEnd, this, this, this);
+        this.outerCircle.drag(onChange, onStart, onEnd, this, this, this);
+      }
 
       this.executeCallback('onReady');
     },
@@ -221,17 +227,20 @@
     },
 
     buildText: function() {
-      return this.c.text(
-        this.options.frameSize / 2,
-        this.options.frameSize / 2 + (this.options.fontSize / 3),
-        '0%'
-      ).attr({
-        fontFamily: this.options.fontFamily,
-        fontSize: this.options.fontSize,
-        fontWeight: this.options.fontWeight,
-        fontStyle: this.options.fontStyle,
-        textAnchor: 'middle'
-      });
+      if(this.options.rendertext) {
+        return this.c.text(
+          this.options.frameSize / 2,
+          this.options.frameSize / 2 + (this.options.fontSize / 3),
+          '0%'
+        ).attr({
+          fontFamily: this.options.fontFamily,
+          fontSize: this.options.fontSize,
+          fontWeight: this.options.fontWeight,
+          fontStyle: this.options.fontStyle,
+          textAnchor: 'middle'
+        });
+      }
+      return ''
     },
 
     generateDropShadow: function(options) {
@@ -247,9 +256,11 @@
     },
 
     updateText: function(percentage) {
-      this.text.attr({
-        text: [Math.round(percentage * 100),'%'].join('')
-      });
+      if(this.options.renderText) {
+        this.text.attr({
+          text: [Math.round(percentage * 100),'%'].join('')
+        });
+      }
     },
 
     calculateFillColor: function(background) {
